@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-configmap
+data:
+  application.properties: |
+    my.message: hello kubernetes

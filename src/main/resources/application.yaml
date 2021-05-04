@@ -1,0 +1,29 @@
+my.message: spring boot
+spring:
+  config:
+    import: optional:/etc/config/
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+
+server:
+  shutdown: graceful
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+    import: classpath:local.properties
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+my.message: spring 2.4

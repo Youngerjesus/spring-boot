@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-demo
+spec:
+  selector:
+    matchLabels:
+      app: app-demo
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: app-demo
+    spec:
+      volumes:
+        - name: k8s-configmap-volume
+          configMap:
+            name: k8s-configmap
+      containers:
+        - name: app-demo
+          image: demo:0.0.1-SNAPSHOT
+          volumeMounts:
+            - mountPath: /etc/config
+              name: k8s-configmap-volume
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/liveness
+            initialDelaySeconds: 10
+            periodSeconds: 3
+            failureThreshold: 2
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/readiness
+            initialDelaySeconds: 10
+            periodSeconds: 3
