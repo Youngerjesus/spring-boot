@@ -1,7 +1,6 @@
-my.message: spring boot
 spring:
   config:
-    import: optional:/etc/config/
+    import: local.properties
   lifecycle:
     timeout-per-shutdown-phase: 10s
 
@@ -13,17 +12,19 @@ management:
     health:
       probes:
         enabled: true
----
-spring:
-  config:
-    activate:
-      on-profile: local
-    import: classpath:local.properties
 
 ---
 spring:
   config:
     activate:
-      on-profile: prod
+      on-cloud-platform: kubernetes
+    import: dev.properties
 
-my.message: spring 2.4
+server:
+  shutdown: graceful
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
