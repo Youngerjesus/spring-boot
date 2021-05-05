@@ -4,6 +4,73 @@ https://spring.io/projects/spring-boot
 
 ***
 
+## Spring Boot Version
+
+SNAPSHOT: 개발 중인 버전
+
+M2: milestone 을 기준으로 배포한 버전이다. 
+
+RC(Release Candiate) 배포 후보 버전이다. 버그가 거의 없겠지만 있을 수 있다. 이 버전에서 GA로 넘어가는 것. 
+
+GA는 안전한 정식 배포 버전이다. 실제 프로젝트를 진행할거면 이걸 하는 걸 추천한다. 
+
+
+
+## Spring Packaging 
+
+Jar(Java Archive)
+
+- JAVA 어플리케이션이 동작할 수 있도록 자바 프로젝트를 압축한 파일로 라이브러리들과 애플리케이션 클래스 파일들이 포함되어 있다. 
+
+- Jar 파일은 그리고 JRE만 있어도 실행이 가능하다. 
+ 
+
+War(Web Application Archive)
+
+- 별도의 웹 서버나 웹 컨테이너가 필요하고 웹 어플리케이션 전체를 말한다. 그러므로 WEB-INF 나 META-INF 와 같은 미리 정의된 구조를 사용한다. 
+
+***
+
+## 의존성 관리
+
+pom.xml 에 버전이 없다. 프로젝트를 식별하는 기준은 groupId, artifactId, version 인데 version이 없는데 maven 을 통해서 보면 버전을 가지고 왔다. 
+
+이 이유는 pom.xml 에 parent 를 보면 `spring-boot-starter-parent` 가 있다. `spring-boot-starter-parent` 의 부모로 `spring-boot-dependencies`  를 가지고 있다. 여기에 `dependencyManagement` 로 해당 의존성의 버전을 모두 명시해주고 있기 떄문이다. 그래서 버전을 생략해도 된다. 
+
+버전을 넣지 않아도 된다는 점 뿐만 아니라 스프링 부트에서 최적화 된 버전을 미리 세팅해놨다는 장점이 있다.
+
+
+***
+
+## 자동 설정 
+
+- @SpringBootApplication 에노테이션은 크게 3가지로 아뤄진다. 스프링 부트에서는 빈을 등록할 때 2번 등록해주는데 처음에는 @ComponentScan 으로 빈을 등록하고 @EnableAutoConfiguration 으로 빈을 등록한다. 
+
+  - @SpringBootConfiguration
+  - @ComponentScan
+  - @EnableAutoConfiguration
+
+- @EnableAutoConfiguration 은 spring-boot autoconfigure 라이브러리에 META-INF 디렉토리 안에 있는 spring.factories 라는 파일에 등록되어 있는 @Configuration 이 붙어있는 파일을 빈으로 등록되어 온다. 
+
+  - `org.springframework.boot.autoconfigure.EnableAutoConfiguration` 에 있는 파일들을 다 빈으로 불러들어온다. 
+  - 이 파일들을 자세히 보면 @ConditionalOnXXX 이런 에노테이션이 있는데 이는 조건에 따라 빈을 등록하거나 말거나 를 말하는 에노테이션이다. 
+
+***  
+
+## @ConfigurationPropertiesScan
+
+스프링 부트 2.2 부터 @ConfigurationProperties를 스캔해서 빈으로 등록하는게 가능하다. 
+
+  - @EnableConfigurationProperties 에노테이션을 이용해서 만들지 않아도 된다. 
+
+  - @ConfigurationPropertiesScan 을 @SpringBootApplication 에 같이 두면 된다. 
+
+이를 사용하면 @ConfigurationProperties 를 Immutable 하게 사용할 수 있다. setter 메소드가 아닌 생성자를 통해서 바인딩 할 수 있으니까. 이는 @ConstructorBinding 에노테이션을 추가해주면 된다. 
+
+
+
+
+
 ## Docker Image
 
 스프링 부트에서 자동으로 도커 이미지를 만들때 효율적으로 만들기 위해 계층형으로 레이어를 나눈다. 어떻게 나눠졌는지 보고 싶으면 `$ jar -xf [JAR_FILE_NAME] ` 을 통해서 보면 된다. layer.idx 가 생긴게 볼 수 있다. 

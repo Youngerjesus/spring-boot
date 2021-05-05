@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @ConstructorBinding
-@ConfigurationProperties("my")
+@ConfigurationProperties(prefix = "my")
 public class MyProperties {
 
     private String message;
